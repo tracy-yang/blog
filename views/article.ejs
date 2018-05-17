@@ -1,0 +1,24 @@
+<%- include('./layout') %>
+
+<div>
+    这是一个文章页
+    <!-- <button>新增</button> -->
+</div>
+
+
+
+<script>
+    // let btn = $('button');
+    // btn.bind('click',()=>{
+    //     $.post('/article/addNews',(data)=>{
+    //         console.log(data);
+    //     },'json');
+    // })
+    window.onload = function(){
+        let newsList = [];
+        $.post('/article/getNewsList',{'page':10,'row':1},data =>{   
+            newsList = data.content.list;      
+            console.log(data);
+        },'json')
+    }
+</script>
