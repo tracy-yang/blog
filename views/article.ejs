@@ -1,24 +1,14 @@
 <%- include('./layout') %>
 
-<div>
-    这是一个文章页
-    <!-- <button>新增</button> -->
+<div class="wrapper">
+    <div class="article-list">
+        <% for(let i=0;i<data.length;i++){%>
+            <div class="list-group article-item">
+                <a href="/article/detail/<%=data[i].id%>" class="list-group-item">
+                    <h4 class="list-group-item-heading"><%=data[i].title%></h4>
+                    <p class="list-group-item-text"><%=data[i].id%></p>
+                </a>
+            </div>
+        <%}%>
+    </div>
 </div>
-
-
-
-<script>
-    // let btn = $('button');
-    // btn.bind('click',()=>{
-    //     $.post('/article/addNews',(data)=>{
-    //         console.log(data);
-    //     },'json');
-    // })
-    window.onload = function(){
-        let newsList = [];
-        $.post('/article/getNewsList',{'page':10,'row':1},data =>{   
-            newsList = data.content.list;      
-            console.log(data);
-        },'json')
-    }
-</script>
