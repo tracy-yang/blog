@@ -1,10 +1,11 @@
 let mongoose = require('mongoose');
 
 let user = new mongoose.Schema({
-    id:String,
     userName:String,
     password:String,
-    nickName:String
+    nickName:String,
+    createTime:Date,
+    isDelete:Number
 })
 
 module.exports = user;
