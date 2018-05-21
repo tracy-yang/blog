@@ -31,6 +31,10 @@ a {
   text-align: center;
   color:#f2f2f2;
 }
+.header-list a:hover{
+  text-decoration: none;
+  color:#337ab7;
+}
 
 /*文章页面*/
 .wrapper{
@@ -52,7 +56,20 @@ a {
 }
 
 .article-item p{
-  padding:5px 0;
+  width:100%;
+  margin:5px 0; 
+  overflow: hidden;
+  text-overflow:ellipsis;
+  white-space: nowrap;
+}
+
+/*文章详情页*/
+.article-detail .title{
+  text-align: center;
+}
+.article-detail .content{
+  text-indent:35px;
+  padding:10px 0 20px 0;
 }
 
 

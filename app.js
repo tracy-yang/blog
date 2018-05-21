@@ -11,7 +11,9 @@ let bodyParser = require('body-parser');
 
 
 var indexRouter = require('./routes/index');
-let article = require('./routes/article');
+let articleRouter = require('./routes/article');
+let messageRouter = require('./routes/message');
+let aboutRouter = require('./routes/about');
 // var usersRouter = require('./routes/users');
 
 var app = express();
@@ -31,9 +33,20 @@ app.use(cookieParser());
 // app.use('/public',express.static(path.join(__dirname, 'public')));
 app.use('/public',express.static('public'));
 
+app.all('*', function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Content-Type,Content-Length, Authorization, Accept,X-Requested-With");
+  res.header("Access-Control-Allow-Methods","PUT,POST,GET,DELETE,OPTIONS");
+  res.header("X-Powered-By",' 3.2.1')
+  if(req.method=="OPTIONS") res.send(200);/*让options请求快速返回*/
+  else  next();
+});
+
+
 app.use('/', indexRouter);
-app.use('/article',article);
-// app.use('/users', usersRouter);
+app.use('/article',articleRouter);
+app.use('/message',messageRouter);
+app.use('/about', aboutRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -6,9 +6,18 @@
             <div class="list-group article-item">
                 <a href="/article/detail/<%=data[i].id%>" class="list-group-item">
                     <h4 class="list-group-item-heading"><%=data[i].title%></h4>
-                    <p class="list-group-item-text"><%=data[i].id%></p>
+                    <p class="list-group-item-text content"><%=data[i].content%></p>
                 </a>
             </div>
         <%}%>
     </div>
 </div>
+<!-- <button>新增</button>
+
+<script>
+    $('button').bind('click',data=>{
+        $.post('/article/addNews',data=>{
+            console.log(data);
+        })
+    })
+</script> -->

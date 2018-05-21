@@ -1,24 +1,26 @@
 var express = require('express');
 var router = express.Router();
 let Article = require('../controller/article')
-let articles = require('../models/articles');
-let util = require('../util/baseRes')
-let mongoose = require('mongoose');
+let util = require('../util/baseRes');
 
 router.get('/',(req,res,next) => {
     Article.getNews().then(data => {
-        res.render('article',{'data':data});
+        res.render('article',{data});
     }); 
 })
 router.post('/getNewsList',Article.getNewsList);
 router.post('/addNews',Article.addNews);
 router.get('/detail/:id',(req,res,next) =>{
-    let oid = mongoose.Type.ObjectId(req.params);
-    console.log(oid)
-    articles.findById(oid,(err,data)=>{
-        console.log('111111',data);
+    Article.getNewsDetailById(req.params.id).then(data =>{
+        res.render('articleDetail',{data});
     })
-    res.render('articleDetail');
+    
+});
+router.post('/detail',(req,res,next) =>{
+    console.log(req.body.id)
+    // Article.getNewsDetailById(req.params.id).then(data =>{
+    //     res.send(util.setResult(200,'查询列表成功',data,util.pagination(page,row)));
+    // })
 })
 
 module.exports = router;

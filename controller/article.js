@@ -1,5 +1,6 @@
 let articles = require('../models/articles');
-let util = require('../util/baseRes')
+let util = require('../util/baseRes');
+let mongoose = require('mongoose');
 
 class Article {
     // 接口
@@ -12,14 +13,13 @@ class Article {
             // 方法1：
             let result = new Promise((resolve,reject) =>{
                 info.exec((err,data) =>{
-                    console.log(data);
+                    console.log(111111111111111111111);
                     if(err) throw err;
                     resolve(data);
                 })
             })
             result.then(data =>{
-                console.log(data);
-                // res.send(util.setResult(200,'查询列表成功',data,util.pagination(page,row)));
+                res.send(util.setResult(200,'查询列表成功',data,util.pagination(page,row)));
             })
 
             // 方法2 报错不成功
@@ -36,20 +36,19 @@ class Article {
         let list = [];
         let start = (row - 1)*page;
         let info = articles.find({}).limit(page).skip(start);
-        let result = new Promise((resolve,reject) =>{
+        return new Promise((resolve,reject) =>{
             info.exec((err,data) =>{
-                if(err) throw err;
+                if(err) reject(err);
                 resolve(data);
             })
         })
-        return result;
     }
 
     // 新增新闻接口
     addNews(req,res){
         let info = new articles({
-            title:'这是第四篇文章',
-            content:'这是第四篇文章的内容发的咖啡机的卡了几分链接发的卡拉解放立刻搭街坊了大家发了打算减肥的',
+            title:'这是第二篇文章',
+            content:'这是第二篇文章的内容发的咖啡机的卡了几分链接发的卡拉解放立刻搭街坊了大家发了打算减肥的',
             createUser:'test01',
             state:'1',
             createTime:'2018-5-17 18:00:00'
@@ -61,9 +60,13 @@ class Article {
     }
 
     // 根据ID查询新闻详情
-    getNewsDetail(id){
-        articles.findById(id,(err,data)=>{
-            console.log(data);
+    getNewsDetailById(id){
+        let oId = mongoose.Types.ObjectId(id); // 转换成Object类型
+        return new Promise((resolve,reject) =>{
+            articles.findById({_id: oId},(err,data)=>{
+                if (err) reject(err);
+                resolve(data);
+            })
         })
     }
 
