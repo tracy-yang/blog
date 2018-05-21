@@ -8,12 +8,17 @@ class Article {
             let page = Number(req.body.page) || 10;
             let row = Number(req.body.row) || 1;
             let start = (row - 1)*page;
+            let state = req.body.state?Number(req.body.state):null;
             let list = null;
-            let info = articles.find({}).limit(page).skip(start);
+            let info ;
+            if(state === null){
+                info = articles.find({}).limit(page).skip(start).sort({'createTime':-1});
+            }else{
+                info = articles.find({'state':state}).limit(page).skip(start).sort({'createTime':-1});
+            }
             // 方法1：
             let result = new Promise((resolve,reject) =>{
                 info.exec((err,data) =>{
-                    console.log(111111111111111111111);
                     if(err) throw err;
                     resolve(data);
                 })
@@ -32,10 +37,15 @@ class Article {
     }
 
     // 给ejs传递新闻列表
-    getNews(page=10,row=1){
+    getNews(state=null,page=10,row=1,){
         let list = [];
         let start = (row - 1)*page;
-        let info = articles.find({}).limit(page).skip(start);
+        let info;
+        if(state === null){
+            info = articles.find({}).limit(page).skip(start).sort({'createTime':-1});
+        }else{
+            info = articles.find({'state':state}).limit(page).skip(start).sort({'createTime':-1});
+        }
         return new Promise((resolve,reject) =>{
             info.exec((err,data) =>{
                 if(err) reject(err);
@@ -46,17 +56,26 @@ class Article {
 
     // 新增新闻接口
     addNews(req,res){
-        let info = new articles({
-            title:'这是第二篇文章',
-            content:'这是第二篇文章的内容发的咖啡机的卡了几分链接发的卡拉解放立刻搭街坊了大家发了打算减肥的',
-            createUser:'test01',
-            state:'1',
-            createTime:'2018-5-17 18:00:00'
-        })
-        info.save((err,fluffy) =>{
-            if(err) throw err;
-            res.send(util.setResult(200,'插入成功'));
-        })
+        let title = req.body.title;
+        let content = req.body.content;
+        let createUser  = req.body.createUser;
+        let state = req.body.state;
+        let createTime = req.body.createTime;   
+        if(title === '' || content === ''  ){
+            res.send(util.setResult(4006,'参数错误'));
+        } else{
+            let info = new articles({
+                title:title,
+                content:content,
+                createUser:createUser,
+                state:state,
+                createTime:createTime
+            })
+            info.save((err,fluffy) =>{
+                if(err) throw err;
+                res.send(util.setResult(200,'插入成功'));
+            })
+        }       
     }
 
     // 根据ID查询新闻详情
@@ -64,10 +83,19 @@ class Article {
         let oId = mongoose.Types.ObjectId(id); // 转换成Object类型
         return new Promise((resolve,reject) =>{
             articles.findById({_id: oId},(err,data)=>{
+                console.log(1111111,data)
                 if (err) reject(err);
                 resolve(data);
             })
         })
+    }
+
+    // 根据ID改变state的状态
+    setStateById(req,res){
+        let oId = mongoose.Types.ObjectId(req.body.id);
+        let state = req.body.state?Number(req.body.state):null;
+        
+
     }
 
 

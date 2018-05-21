@@ -4,7 +4,7 @@ let Article = require('../controller/article')
 let util = require('../util/baseRes');
 
 router.get('/',(req,res,next) => {
-    Article.getNews().then(data => {
+    Article.getNews(1).then(data => {
         res.render('article',{data});
     }); 
 })
@@ -17,10 +17,9 @@ router.get('/detail/:id',(req,res,next) =>{
     
 });
 router.post('/detail',(req,res,next) =>{
-    console.log(req.body.id)
-    // Article.getNewsDetailById(req.params.id).then(data =>{
-    //     res.send(util.setResult(200,'查询列表成功',data,util.pagination(page,row)));
-    // })
+    Article.getNewsDetailById(req.body.id).then(data =>{
+        res.send(util.setResult(200,'查询列表成功',data));
+    })
 })
 
 module.exports = router;
