@@ -21,5 +21,5 @@ router.post('/detail',(req,res,next) =>{
         res.send(util.setResult(200,'查询列表成功',data));
     })
 })
-
+router.post('/setStateById',Article.setStateById);
 module.exports = router;

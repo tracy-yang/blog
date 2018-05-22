@@ -93,7 +93,16 @@ class Article {
     // 根据ID改变state的状态
     setStateById(req,res){
         let oId = mongoose.Types.ObjectId(req.body.id);
-        let state = req.body.state?Number(req.body.state):null;
+        let state = req.body.state;
+        console.log(state)
+        if(oId){
+            articles.where({_id:oId}).update({$set:{state:state}},(err,data) =>{
+                if(data.nModified){
+                    res.send(util.setResult(200,'操作成功'));
+                }
+            })
+
+        }
         
 
     }
