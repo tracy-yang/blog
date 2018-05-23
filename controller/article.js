@@ -58,7 +58,6 @@ class Article {
     // 新增新闻接口
     addNews(req,res){
         try {
-            
             let title = req.body.title;
             let content = req.body.content;
             let createUser  = req.body.createUser;
@@ -111,6 +110,22 @@ class Article {
                 }
             })
         }
+    }
+
+    // 编辑新闻详情
+    editNews(req,res){
+        let oId = mongoose.Types.ObjectId(req.body.id);
+        let title = req.body.title;
+        let content = req.body.content;
+        let createUser  = req.body.createUser;
+        let updateTime = req.body.updateTime;
+        console.log(oId,title,content,createUser,updateTime);
+        articles.where({_id:oId}).update({'title':title},{$set:{"content":content}},(err,data) =>{
+            console.log(data);
+            if(data.nModified){
+                res.send(util.setResult(200,'操作成功'));
+            }
+        }) 
     }
 }
 
