@@ -9,7 +9,6 @@ let ejs = require('ejs');
 let bodyParser = require('body-parser');
 
 
-
 var indexRouter = require('./routes/index');
 let articleRouter = require('./routes/article');
 let messageRouter = require('./routes/message');
@@ -42,6 +41,8 @@ app.all('*', function(req, res, next) {
   else  next();
 });
 
+app.use(bodyParser.json({limit: '100mb'}));
+app.use(bodyParser.urlencoded({limit: '100mb', extended: true}));
 
 app.use('/', indexRouter);
 app.use('/article',articleRouter);
@@ -52,6 +53,9 @@ app.use('/about', aboutRouter);
 app.use(function(req, res, next) {
   next(createError(404));
 });
+
+
+
 
 // error handler
 app.use(function(err, req, res, next) {

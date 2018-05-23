@@ -1,6 +1,7 @@
 let articles = require('../models/articles');
 let util = require('../util/baseRes');
 let mongoose = require('mongoose');
+let assert = require('assert');
 
 class Article {
     // 接口
@@ -56,26 +57,34 @@ class Article {
 
     // 新增新闻接口
     addNews(req,res){
-        let title = req.body.title;
-        let content = req.body.content;
-        let createUser  = req.body.createUser;
-        let state = req.body.state;
-        let createTime = req.body.createTime;   
-        if(title === '' || content === ''  ){
+        try {
+            
+            let title = req.body.title;
+            let content = req.body.content;
+            let createUser  = req.body.createUser;
+            let state = req.body.state;
+            let createTime = req.body.createTime;   
+            // if(title === '' || content === ''  ){
+            //     res.send(util.setResult(4006,'参数错误'));
+            // } else{
+                let info = new articles({
+                    title:title,
+                    content:content,
+                    createUser:createUser,
+                    state:state,
+                    createTime:createTime
+                })
+                throw info.validateSync(); 
+                info.save((err,fluffy) =>{
+                    if(err) throw err;
+                    res.send(util.setResult(200,'插入成功'));
+                })
+            // }       
+        } catch (error) {
             res.send(util.setResult(4006,'参数错误'));
-        } else{
-            let info = new articles({
-                title:title,
-                content:content,
-                createUser:createUser,
-                state:state,
-                createTime:createTime
-            })
-            info.save((err,fluffy) =>{
-                if(err) throw err;
-                res.send(util.setResult(200,'插入成功'));
-            })
-        }       
+            console.log(error.errors['title'].message);
+            
+        }
     }
 
     // 根据ID查询新闻详情
@@ -101,15 +110,8 @@ class Article {
                     res.send(util.setResult(200,'操作成功'));
                 }
             })
-
         }
-        
-
     }
-
-
-
-
 }
 
 module.exports = new Article()
