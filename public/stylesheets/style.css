@@ -55,13 +55,13 @@ a {
   color: #2e3135;
 }
 
-.article-item p{
+/* .article-item div{
   width:100%;
-  /* margin:5px 0;  */
+  margin:5px 0; 
   overflow: hidden;
   text-overflow:ellipsis;
   white-space: nowrap;
-}
+} */
 
 /*文章详情页*/
 .article-detail .title{

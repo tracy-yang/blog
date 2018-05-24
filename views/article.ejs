@@ -6,7 +6,7 @@
             <div class="list-group article-item">
                 <a href="/article/detail/<%=data[i].id%>" class="list-group-item">
                     <h4 class="list-group-item-heading"><%=data[i].title%></h4>
-                    <p class="list-group-item-text content"><%-data[i].content%></p>
+                    <div class="list-group-item-text content"><%- data[i].content%></div>
                 </a>
             </div>
         <%}%>

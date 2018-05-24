@@ -3,6 +3,8 @@ var router = express.Router();
 let Article = require('../controller/article')
 let util = require('../util/baseRes');
 
+// let Article = new article();
+
 router.get('/',(req,res,next) => {
     Article.getNews(1).then(data => {
         res.render('article',{data});

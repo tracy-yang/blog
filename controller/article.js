@@ -1,7 +1,6 @@
 let articles = require('../models/articles');
 let util = require('../util/baseRes');
 let mongoose = require('mongoose');
-let assert = require('assert');
 
 class Article {
     // 接口
@@ -62,7 +61,8 @@ class Article {
             let content = req.body.content;
             let createUser  = req.body.createUser;
             let state = req.body.state;
-            let createTime = req.body.createTime;   
+            let createTime = req.body.createTime;  
+            // console.log(title,content,createUser,state,createTime) 
             // if(title === '' || content === ''  ){
             //     res.send(util.setResult(4006,'参数错误'));
             // } else{
@@ -73,9 +73,13 @@ class Article {
                     state:state,
                     createTime:createTime
                 })
-                throw info.validateSync(); 
+                let err = info.validateSync(); 
+                if(err){
+                    throw err
+                }
                 info.save((err,fluffy) =>{
                     if(err) throw err;
+                    console.log(fluffy);
                     res.send(util.setResult(200,'插入成功'));
                 })
             // }       
@@ -91,7 +95,6 @@ class Article {
         let oId = mongoose.Types.ObjectId(id); // 转换成Object类型
         return new Promise((resolve,reject) =>{
             articles.findById({_id: oId},(err,data)=>{
-                console.log(1111111,data)
                 if (err) reject(err);
                 resolve(data);
             })
@@ -101,10 +104,9 @@ class Article {
     // 根据ID改变state的状态
     setStateById(req,res){
         let oId = mongoose.Types.ObjectId(req.body.id);
-        let state = req.body.state;
-        console.log(state)
+        let state = req.body.state; 
         if(oId){
-            articles.where({_id:oId}).update({$set:{state:state}},(err,data) =>{
+            articles.update({_id:oId},{$set:{state:state}},(err,data) =>{  // 该条update语句等价于：articles.where({_id:oId}).update({$set:{state:state}},(err,data)=>{})
                 if(data.nModified){
                     res.send(util.setResult(200,'操作成功'));
                 }
@@ -119,9 +121,7 @@ class Article {
         let content = req.body.content;
         let createUser  = req.body.createUser;
         let updateTime = req.body.updateTime;
-        console.log(oId,title,content,createUser,updateTime);
-        articles.where({_id:oId}).update({'title':title},{$set:{"content":content}},(err,data) =>{
-            console.log(data);
+        articles.update({_id:oId},{$set:{'title':title,'content':content,'createUser':createUser,'updateTime':updateTime}},(err,data) =>{
             if(data.nModified){
                 res.send(util.setResult(200,'操作成功'));
             }
@@ -131,7 +131,7 @@ class Article {
 
 module.exports = new Article()
 
-
+// module.exports = Article;
 
 
 
