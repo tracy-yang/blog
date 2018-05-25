@@ -17,12 +17,23 @@ class User{
 
     // 登陆
     login(req,res){
-        let userName = req.body.userName?req.body.userName:'';
-        let password = req.body.password?req.body.password:'';
-        user.findOne({'userName':userName,'password': password},(err,data) =>{
-            if(err) throw err;
-            res.send(util.setResult(200,'登陆成功',data));
-        })
+        try {
+            let userName = req.body.userName?req.body.userName:'';
+            console.log(req.body.password)
+            let password = req.body.password?req.body.password:'';
+            user.findOne({'userName':userName,'password': password},(err,data) =>{
+                if(err)  throw err;                  
+                console.log(data,3333);
+                if(data){
+                    res.send(util.setResult(200,'登陆成功',data));
+                }else{
+                    res.send(util.setResult(4006,'用户名密码错误'));  
+                }   
+            })
+        } catch (error) {
+            res.send(util.setResult(4006,'参数错误'));       
+        }
+        
     }
 
     // 注册
