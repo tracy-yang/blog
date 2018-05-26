@@ -5,17 +5,24 @@ let mongoose = require('mongoose');
 class Article {
     // 接口
     getNewsList(req,res){
-            let page = Number(req.body.page) || 10;
-            let row = Number(req.body.row) || 1;
+            let page = Number(req.body.page);
+            let row = Number(req.body.row);
             let start = (row - 1)*page;
-            let state = req.body.state?Number(req.body.state):null;
-            let list = null;
-            let info ;
-            if(state === null){
-                info = articles.find({}).limit(page).skip(start).sort({'createTime':-1});
-            }else{
-                info = articles.find({'state':state}).limit(page).skip(start).sort({'createTime':-1});
-            }
+            let title = req.body.title?req.body.title:'';
+            let createUser = req.body.createUser?req.body.createUser:'';
+            let createTime = req.body.createTime?req.body.createTime:null;
+            console.log(createTime)
+            let state = req.body.state !==''?Number(req.body.state):'';  
+            let baseQuery = {'title':{$regex:title},'createUser':{$regex:createUser}};
+            if(state !== ''){
+                Object.assign(baseQuery,{'state':state})
+            }   
+            if(createTime){
+                console.log(createTime+1);
+                Object.assign(baseQuery,{'createTime':{$gte:new Date(createTime)}}) //,$lt:new Date()
+            }  
+            console.log(baseQuery);
+            let info = articles.find(baseQuery).limit(page).skip(start).sort({'createTime':-1});
             // 方法1：
             let result = new Promise((resolve,reject) =>{
                 info.exec((err,data) =>{
@@ -37,15 +44,10 @@ class Article {
     }
 
     // 给ejs传递新闻列表
-    getNews(state=null,page=10,row=1,){
+    getNews(state=0,page=10,row=1,){
         let list = [];
         let start = (row - 1)*page;
-        let info;
-        if(state === null){
-            info = articles.find({}).limit(page).skip(start).sort({'createTime':-1});
-        }else{
-            info = articles.find({'state':state}).limit(page).skip(start).sort({'createTime':-1});
-        }
+        let info = articles.find({'state':{$gte:state}}).limit(page).skip(start).sort({'createTime':-1});
         return new Promise((resolve,reject) =>{
             info.exec((err,data) =>{
                 if(err) reject(err);
