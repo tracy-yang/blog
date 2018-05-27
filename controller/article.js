@@ -11,29 +11,48 @@ class Article {
             let title = req.body.title?req.body.title:'';
             let createUser = req.body.createUser?req.body.createUser:'';
             let createTime = req.body.createTime?req.body.createTime:null;
-            console.log(createTime)
             let state = req.body.state !==''?Number(req.body.state):'';  
             let baseQuery = {'title':{$regex:title},'createUser':{$regex:createUser}};
             if(state !== ''){
                 Object.assign(baseQuery,{'state':state})
             }   
             if(createTime){
-                console.log(createTime+1);
-                Object.assign(baseQuery,{'createTime':{$gte:new Date(createTime)}}) //,$lt:new Date()
+                let date = new Date(createTime);
+                Object.assign(baseQuery,{'createTime':{$gte:date,$lt:new Date(date.getFullYear(),date.getMonth(),date.getDate()+1)}});
             }  
-            console.log(baseQuery);
             let info = articles.find(baseQuery).limit(page).skip(start).sort({'createTime':-1});
+            let count = articles.find(baseQuery);
             // 方法1：
             let result = new Promise((resolve,reject) =>{
                 info.exec((err,data) =>{
                     if(err) throw err;
-                    resolve(data);
+                    // resolve(data)
+                    // 写在一个promise
+                    count.count((err,total) =>{
+                        resolve({'data':data,'total':total})
+                    })
                 })
             })
-            result.then(data =>{
-                res.send(util.setResult(200,'查询列表成功',data,util.pagination(page,row)));
-            })
+            
 
+            result.then(data =>{
+                res.send(util.setResult(200,'查询列表成功',data.data,util.pagination(page,row,data.total)));
+                
+                //写2个promise
+                // return new Promise((resolve,reject) =>{
+                //     info.count((err,total) =>{
+                //         resolve({'data':data,'total':total})
+                //     })
+                // })
+            })
+            // 在抓一个then
+            // .then(data =>{
+            //     console.log(data)
+            //     res.send(util.setResult(200,'查询列表成功',data.data,util.pagination(page,row,data.total)));
+                
+            // })
+
+            
             // 方法2 报错不成功
             // let a = info.exec((err,doc) =>{
             //     if(err) throw err;
