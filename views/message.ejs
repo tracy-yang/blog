@@ -1,76 +1,28 @@
 <%- include('./layout') %>
 <script src="https://unpkg.com/wangeditor@3.1.1/release/wangEditor.min.js"></script>
-<style>
-   #editor{
-       width:700px !important;
-       display: inline-block;
-   }
-   .w-e-text-container{
-        height:200px !important;
-   }
-   .editor-wrapper{
-       padding-top:20px;
-   }
-   .editor-wrapper label{
-       width:60px;
-       display:inline-block;
-       vertical-align: top;
-   }
-   .editor-wrapper input{
-       width:400px;
-   }
-   .editor-wrapper>div{
-       padding-bottom:20px;
-   }
-   .message-item{
-       border:#ddd solid 1px;
-       border-right: none;
-       border-left:none;
-       padding:20px;
-       margin:20px 0;
-   }
-   .message-item span{
-       display: inline-block;
-   }
-   .message-item .userName{
-       min-width:100px;
-       font-weight: bold;
-       padding-right:15px;
-   }
-   .message-item .userName +span{
-       min-width:80px;
-   }
-   .message-item .message-content{
-       margin:15px 0;
-   }
-   .message-option span:first-of-type{
-       min-width: 100px;
-       padding-right:15px;
-   }
-   .message-option span:not(:first-of-type){
-       color:#26709A;
-   }
-   .message-option span:nth-of-type(2){
-       padding-right:10px;
-   }
-</style>
 
 <!--内容区-->
 <div class="wrapper">
     <div class="message-list">
-        <div class="message-item">
-            <span class="userName">时光如水总是无言</span>
-            <span>第1楼</span>
-            <div class="message-content">
-                这是内容
+        <% for(var i = 0;i<data.length;i++){ %>
+            <div class="message-item" >
+                <span class="userName"><%=data[i].userName%></span>
+                <span>第<%=data.length - i%>楼</span>
+                <div class="message-content">
+                    <%-data[i].content%>
+                </div>
+                <div class="message-option">
+                    <span><%=data[i].createTime%></span>
+                    <!-- <span>回复</span> -->
+                    <span id="delMessage" style="cursor: pointer;">删除</span>
+                </div>
+                <!-- <div class="message-reply">
+                    <div>
+
+                    </div>
+                </div> -->
             </div>
-            <div class="message-option">
-                <span>2011-06-05 18:15</span>
-                <span>回复</span>
-                <span>删除</span>
-            </div>
-            
-        </div>
+        <%}%>
     </div>
     <div class="editor-wrapper">
         <div>
@@ -79,9 +31,10 @@
         </div>
         <div class="editor">
             <label for="" >留言内容</label>
-            <span id="editor" >
-                <p>请发表您的留言</p>
-            </span>
+            <span id="editor"></span>
+        </div>
+        <div class="btn-group">
+            <button id="submit">提交</button>
         </div>
     </div>
     
@@ -91,4 +44,26 @@
     let E = window.wangEditor;
     let editor = new E('#editor');
     editor.create();
+    // $.post('/message/getMessageList',{'state':1},(data) =>{ 
+    //     console.log(data); 
+    // },'json')
+
+    // 删除留言
+    $('#delMessage').bind('click',()=>{
+        console.log(3333333333);
+    })
+
+    // 新增
+    $('#submit').bind('click',()=>{
+        let userName = $('#userName').val();
+        let content = editor.txt.html();
+        if(userName && content){
+            // 请求接口
+            $.post('/message/addNewMessage',{'userName':userName,'content':content,'state':1},(data) =>{
+                location.reload();
+            },'json')
+        }else{
+            alert('用户名和内容不能为空')
+        }
+    })
 </script>

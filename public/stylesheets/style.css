@@ -73,4 +73,90 @@ a {
 }
 
 
+/*留言板*/
+#editor{
+  width:700px !important;
+  display: inline-block;
+}
+.w-e-text-container{
+   height:200px !important;
+}
+.editor-wrapper{
+  padding-top:20px;
+}
+.editor-wrapper label{
+  width:60px;
+  display:inline-block;
+  vertical-align: top;
+}
+.editor-wrapper input{
+  width:400px;
+}
+.editor-wrapper>div{
+  padding-bottom:20px;
+}
+.message-item{
+  border:#ddd solid 1px;
+  border-right: none;
+  border-left:none;
+  padding:20px;
+  margin:20px 0;
+}
+.message-item span{
+  display: inline-block;
+}
+.message-item .userName{
+  min-width:100px;
+  font-weight: bold;
+  padding-right:15px;
+}
+.message-item .userName +span{
+  min-width:80px;
+}
+.message-item .message-content{
+  margin:15px 0;
+}
+.message-option span:first-of-type{
+  min-width: 100px;
+  padding-right:15px;
+}
+.message-option span:not(:first-of-type){
+  color:#26709A;
+}
+.message-option span:nth-of-type(2){
+  padding-right:10px;
+}
+
+#submit{
+    color: #fff;
+    background-color: #337ab7;
+    border-color: #2e6da4;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    padding: 6px 12px;
+    margin-bottom: 0;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.42857143;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    -ms-touch-action: manipulation;
+    touch-action: manipulation;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    background-image: none;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    width: 120px;
+    height:40px;
+}
+.btn-group{
+  margin-left:60px;
+}
+
+
 
