@@ -44,6 +44,22 @@ class Message{
             console.log(error);
         }
     }
+
+    // 删除留言
+    delMessage(req,res){
+        try {
+            let id = mongoose.Types.ObjectId(req.body.id)
+            message.update({_id:id},{$set:{'state':0}}).then(data =>{
+            //    if(err) throw err;
+               if(data.nModified){
+                    res.send(util.setResult(200,'删除成功'));
+               }
+            })
+            
+        } catch (error) {
+            console.log(error);
+        }
+    }
 }
 
 module.exports = new Message();

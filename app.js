@@ -49,7 +49,7 @@ wss.on('connection', function (ws) {
     });
     process.on('SIGINT', function () {
         console.log("Closing things");
-        closeSocket('Server has disconnected');
+        // closeSocket('Server has disconnected');
         process.exit();
     });
 });

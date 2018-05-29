@@ -19,4 +19,8 @@ router.post('/getMessageList',(req,res,next)=>{
 // 新增
 router.post('/addNewMessage',Message.addNewMessage)
 
+
+// 删除
+router.post('/delMessage',Message.delMessage);
+
 module.exports = router;

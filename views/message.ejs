@@ -14,7 +14,7 @@
                 <div class="message-option">
                     <span><%=data[i].createTime%></span>
                     <!-- <span>回复</span> -->
-                    <span id="delMessage" style="cursor: pointer;">删除</span>
+                    <span id="delMessage" style="cursor: pointer;" data-id=<%=data[i].id%>>删除</span>
                 </div>
                 <!-- <div class="message-reply">
                     <div>
@@ -50,7 +50,11 @@
 
     // 删除留言
     $('#delMessage').bind('click',()=>{
-        console.log(3333333333);
+        let id = $('#delMessage').attr("data-id");
+        $.post('/message/delMessage',{id:id},(data) =>{
+            alert('删除成功');
+            location.reload();
+        },'json')
     })
 
     // 新增
@@ -62,7 +66,7 @@
             $.post('/message/addNewMessage',{'userName':userName,'content':content,'state':1},(data) =>{
                 let info = `${userName}发表了一条留言！`
                 webSocket(info);
-                // location.reload();
+                location.reload();
             },'json')
         }else{
             alert('用户名和内容不能为空')
