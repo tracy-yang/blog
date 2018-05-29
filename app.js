@@ -7,15 +7,53 @@ let mongo = require('mongodb');
 let mongoose = require('mongoose');
 let ejs = require('ejs');
 let bodyParser = require('body-parser');
+var UUID = require('node-uuid');
 
 
+// 
 var indexRouter = require('./routes/index');
 let articleRouter = require('./routes/article');
 let messageRouter = require('./routes/message');
 let aboutRouter = require('./routes/about');
 var usersRouter = require('./routes/users');
+// let wsRouter = require('./routes/ws')
 
 var app = express();
+// let expressWs = require('express-ws')(app);
+
+// 使用webScoket
+var WebSocket = require('ws');
+var WebSocketServer = WebSocket.Server,
+wss = new WebSocketServer({ port: 8181 });
+let connectionList = [];
+
+wss.on('connection', function (ws) {
+    var uuid = UUID.v4();
+    // let uuid = ws[Symbol(asyncId)];
+    console.log(uuid);
+    connectionList.push({id:uuid,ws:ws});
+    ws.on('message', function (message) {
+      if(connectionList.length){
+        for(let i = 0;i<connectionList.length;i++){
+          let socket = connectionList[i].ws;
+          if(socket.readyState === WebSocket.OPEN){
+            socket.send(JSON.stringify({'id':uuid,'message':message}));
+          }
+        }
+      }else{
+        wss.send(JSON.stringify({'id':uuid,'message':message}));
+      }
+    });
+    ws.on('close', function () {
+      console.log('连接已经关闭')
+    });
+    process.on('SIGINT', function () {
+        console.log("Closing things");
+        closeSocket('Server has disconnected');
+        process.exit();
+    });
+});
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views')); 
@@ -24,6 +62,7 @@ app.set('views', path.join(__dirname, 'views'));
 // app.set('view engine', 'html');
 // 使用ejs为模板
 app.set('view engine','ejs');
+
 
 app.use(logger('dev'));
 // app.use(express.json());
@@ -49,6 +88,7 @@ app.use('/article',articleRouter);
 app.use('/message',messageRouter);
 app.use('/about', aboutRouter);
 app.use('/user', usersRouter);
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

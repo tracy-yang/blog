@@ -60,10 +60,33 @@
         if(userName && content){
             // 请求接口
             $.post('/message/addNewMessage',{'userName':userName,'content':content,'state':1},(data) =>{
-                location.reload();
+                let info = `${userName}发表了一条留言！`
+                webSocket(info);
+                // location.reload();
             },'json')
         }else{
             alert('用户名和内容不能为空')
         }
     })
+
+    function webSocket(message){
+        var ws = new WebSocket("ws://192.168.121.23:8181");
+        
+        ws.onopen = function() {
+            // Web Socket 已连接上，使用 send() 方法发送数据
+            console.log(message);
+            ws.send(message);
+        };
+        
+        ws.onmessage = function (evt) { 
+            var received_msg = JSON.parse(evt.data);
+            console.log(received_msg);
+            // alert("数据已接收...");
+        };
+        
+        ws.onclose = function() { 
+            // 关闭 websocket
+            alert("连接已关闭..."); 
+        };
+    }
 </script>
